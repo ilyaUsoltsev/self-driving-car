@@ -1,3 +1,4 @@
+import type { Borders } from './types';
 import { clamp } from './utils/clamp';
 import { lerp } from './utils/lerp';
 
@@ -7,7 +8,7 @@ class Road {
   laneWidth: number;
   top: number;
   bottom: number;
-  borders: { x: number; y: number }[][];
+  borders: Borders;
 
   constructor(
     private x: number,

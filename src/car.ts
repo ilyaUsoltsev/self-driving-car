@@ -1,4 +1,6 @@
 import Controls from './controls';
+import Sensor from './sensor';
+import type { Borders } from './types';
 
 class Car {
   controls: Controls;
@@ -7,6 +9,7 @@ class Car {
   maxSpeed: number;
   friction: number;
   angle: number;
+  sensor: Sensor;
 
   constructor(
     public x: number,
@@ -19,6 +22,7 @@ class Car {
     this.maxSpeed = 3;
     this.friction = 0.05;
     this.angle = 0;
+    this.sensor = new Sensor(this);
     this.controls = new Controls();
   }
 
@@ -30,10 +34,12 @@ class Car {
     ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
     ctx.fill();
     ctx.restore();
+    this.sensor.draw(ctx);
   }
 
-  update() {
+  update(roadBorders: Borders) {
     this.move();
+    this.sensor.update(roadBorders);
   }
 
   private move() {
