@@ -33,14 +33,15 @@ class Car {
   }
 
   update() {
+    this.move();
+  }
+
+  private move() {
     if (this.controls.forward) {
       this.speed += this.acceleration;
     }
     if (this.controls.reverse) {
       this.speed -= this.acceleration;
-    }
-    if (this.speed > this.maxSpeed) {
-      this.speed = this.maxSpeed;
     }
     if (this.speed < 0) {
       this.speed += this.friction;
@@ -51,6 +52,10 @@ class Car {
     if (Math.abs(this.speed) < this.friction) {
       this.speed = 0;
     }
+    if (Math.abs(this.speed) >= this.maxSpeed) {
+      this.speed = Math.sign(this.speed) * this.maxSpeed;
+    }
+
     this.x -= Math.sin(this.angle) * this.speed;
     this.y -= Math.cos(this.angle) * this.speed;
 
