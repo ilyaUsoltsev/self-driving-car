@@ -12,3 +12,13 @@ body {
 #networkCanvas {
   background: #bcbcbc;
 }
+
+#verticalButtons{
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

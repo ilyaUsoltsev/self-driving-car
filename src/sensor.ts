@@ -11,7 +11,7 @@ class Sensor {
   readings: (null | { x: number; y: number; offset: number })[];
 
   constructor(private car: Car) {
-    this.rayCount = 5;
+    this.rayCount = 7;
     this.rayLength = 100;
     this.raySpread = Math.PI / 2; // 90 degrees spread
 

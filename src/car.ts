@@ -40,7 +40,7 @@ class Car {
     this.polygon = this.createPolygon();
   }
 
-  draw(ctx: CanvasRenderingContext2D, color: string) {
+  draw(ctx: CanvasRenderingContext2D, color: string, drawSensor = false) {
     if (this.damaged) {
       ctx.fillStyle = 'gray';
     } else {
@@ -53,7 +53,7 @@ class Car {
       ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
     }
     ctx.fill();
-    if (this.sensor) {
+    if (this.sensor && drawSensor) {
       this.sensor.draw(ctx);
     }
   }

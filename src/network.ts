@@ -1,3 +1,5 @@
+import { lerp } from './utils/lerp';
+
 class NeuralNetwork {
   levels: Level[];
   constructor(neuronCounts: number[]) {
@@ -13,6 +15,23 @@ class NeuralNetwork {
       outputs = Level.feedForward(outputs, network.levels[i]);
     }
     return outputs;
+  }
+
+  static mutate(network: NeuralNetwork, amount = 1) {
+    network.levels.forEach((level) => {
+      for (let i = 0; i < level.biases.length; i++) {
+        level.biases[i] = lerp(level.biases[i], Math.random() * 2 - 1, amount);
+      }
+      for (let i = 0; i < level.biases.length; i++) {
+        for (let j = 0; j < level.inputs.length; j++) {
+          level.weights[j][i] = lerp(
+            level.weights[j][i],
+            Math.random() * 2 - 1,
+            amount
+          );
+        }
+      }
+    });
   }
 }
 
