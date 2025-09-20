@@ -16,6 +16,7 @@ class Car {
   damaged = false;
   neuralNetwork: NeuralNetwork | null = null;
   useAI: boolean;
+  image: HTMLImageElement;
 
   constructor(
     public x: number,
@@ -31,28 +32,31 @@ class Car {
     this.friction = 0.05;
     this.angle = 0;
     this.useAI = this.type === 'AI';
+    this.polygon = this.createPolygon();
+
     if (this.type !== 'DUMMY') {
       this.sensor = new Sensor(this);
       this.neuralNetwork = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
     }
 
     this.controls = new Controls(this.type);
-    this.polygon = this.createPolygon();
+    this.image = new Image();
+    this.image.src = './car.png';
   }
 
   draw(ctx: CanvasRenderingContext2D, color: string, drawSensor = false) {
-    if (this.damaged) {
-      ctx.fillStyle = 'gray';
-    } else {
-      ctx.fillStyle = color;
-    }
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(-this.angle);
+    ctx.drawImage(
+      this.image,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
+    );
+    ctx.restore();
 
-    ctx.beginPath();
-    ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-    for (let i = 1; i < this.polygon.length; i++) {
-      ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-    }
-    ctx.fill();
     if (this.sensor && drawSensor) {
       this.sensor.draw(ctx);
     }
