@@ -5,3 +5,5 @@ export interface Point {
 
 export type Segment = [Point, Point];
 export type Borders = [Segment, Segment];
+
+export type CarControl = 'KEYS' | 'DUMMY' | 'AI';

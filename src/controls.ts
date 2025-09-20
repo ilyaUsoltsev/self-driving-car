@@ -1,10 +1,12 @@
+import type { CarControl } from './types';
+
 class Controls {
   forward: boolean;
   left: boolean;
   right: boolean;
   reverse: boolean;
 
-  constructor(private type: 'KEYS' | 'DUMMY') {
+  constructor(private type: CarControl) {
     this.forward = false;
     this.left = false;
     this.right = false;
