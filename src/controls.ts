@@ -4,12 +4,16 @@ class Controls {
   right: boolean;
   reverse: boolean;
 
-  constructor() {
+  constructor(private type: 'KEYS' | 'DUMMY') {
     this.forward = false;
     this.left = false;
     this.right = false;
     this.reverse = false;
-    this.addKeyboardListeners();
+    if (this.type === 'KEYS') {
+      this.addKeyboardListeners();
+    } else if (this.type === 'DUMMY') {
+      this.forward = true;
+    }
   }
 
   private addKeyboardListeners() {

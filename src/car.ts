@@ -10,7 +10,7 @@ class Car {
   maxSpeed: number;
   friction: number;
   angle: number;
-  sensor: Sensor;
+  sensor: Sensor | null = null;
   polygon: Point[];
   damaged = false;
 
@@ -18,23 +18,28 @@ class Car {
     public x: number,
     public y: number,
     public width: number,
-    public height: number
+    public height: number,
+    public type: 'KEYS' | 'DUMMY',
+    public maxSpeedOverride?: number
   ) {
     this.speed = 0;
     this.acceleration = 0.2;
-    this.maxSpeed = 3;
+    this.maxSpeed = this.maxSpeedOverride || 3;
     this.friction = 0.05;
     this.angle = 0;
-    this.sensor = new Sensor(this);
-    this.controls = new Controls();
+    if (this.type !== 'DUMMY') {
+      this.sensor = new Sensor(this);
+    }
+
+    this.controls = new Controls(this.type);
     this.polygon = this.createPolygon();
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, color: string) {
     if (this.damaged) {
       ctx.fillStyle = 'gray';
     } else {
-      ctx.fillStyle = 'blue';
+      ctx.fillStyle = color;
     }
 
     ctx.beginPath();
@@ -43,16 +48,20 @@ class Car {
       ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
     }
     ctx.fill();
-    this.sensor.draw(ctx);
+    if (this.sensor) {
+      this.sensor.draw(ctx);
+    }
   }
 
-  update(roadBorders: Borders) {
+  update(roadBorders: Borders, traffic: Car[]) {
     if (!this.damaged) {
       this.move();
       this.polygon = this.createPolygon();
-      this.damaged = this.assessDamage(roadBorders);
+      this.damaged = this.assessDamage(roadBorders, traffic);
     }
-    this.sensor.update(roadBorders);
+    if (this.sensor) {
+      this.sensor.update(roadBorders, traffic);
+    }
   }
 
   private createPolygon() {
@@ -115,10 +124,17 @@ class Car {
     }
   }
 
-  assessDamage(roadBorders: Borders) {
+  assessDamage(roadBorders: Borders, traffic: Car[]) {
     for (let i = 0; i < roadBorders.length; i++) {
       const border = roadBorders[i];
       if (polygonsIntersect(this.polygon, border)) {
+        return true;
+      }
+    }
+    for (let i = 0; i < traffic.length; i++) {
+      const car = traffic[i];
+      if (polygonsIntersect(this.polygon, car.polygon)) {
+        console.log(this.polygon, car.polygon);
         return true;
       }
     }
